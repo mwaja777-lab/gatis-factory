@@ -2,6 +2,7 @@ import os, datetime, time, threading, random
 
 API_KEY = os.environ.get("API_KEY", "zcSppmualzfGe8l")
 API_PASSWORD = os.environ.get("API_PASSWORD", "Mllyar$7")
+# هذه القائمة تحتوي على 10 حسابات: حساب رئيسي و 9 حسابات فرعية
 ACCOUNTS = ["Master", "Sub-1", "Sub-2", "Sub-3", "Sub-4", "Sub-5", "Sub-6", "Sub-7", "Sub-8", "Sub-9"]
 
 class DecisionEngine:

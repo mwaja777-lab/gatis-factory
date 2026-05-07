@@ -17,10 +17,12 @@ def send_telegram_signal():
     riyadh_now = get_riyadh_time()
     text = f"🚀 *مصنع إيش تشتي - نداء الماستر*\n\n✅ تم كسر جدار الحماية بنجاح\n⏰ التوقيت: {riyadh_now}\n📡 الحالة: متصل بالسحاب"
     
-    # إعدادات الوسيط (Proxy) للحسابات المجانية
+        # إعدادات الوسيط البديلة لفك الاختناق
     proxies = {
         'http': 'http://proxy.server:3128',
         'https': 'http://proxy.server:3128',
+    }
+
     }
     
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"

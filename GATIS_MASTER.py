@@ -3,39 +3,39 @@ import time
 import datetime
 import pytz
 
-def get_riyadh_time():
-    # توقيت الرياض الدقيق
+# إعداد توقيت الرياض
+def get_time():
     riyadh_tz = pytz.timezone('Asia/Riyadh')
     return datetime.datetime.now(riyadh_tz).strftime("%I:%M:%S %p")
 
-def fetch_price(symbol, label):
-    """رادار سحب الأسعار من البورصة العالمية مباشرة"""
+def fetch_market_data():
+    """هذا هو رادار الأسعار العالمي الصافي"""
     try:
-        url = f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}"
-        res = requests.get(url, timeout=10)
-        if res.status_code == 200:
-            price = float(res.json()['price'])
-            return f"{label}: ${price:,.2f}"
-    except:
-        return f"{label}: جارٍ إعادة الاتصال..."
-    return f"{label}: غير متاح"
+        # سحب سعر الذهب (PAXG) مقابل الدولار
+        url = "https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT"
+        response = requests.get(url, timeout=15)
+        if response.status_code == 200:
+            price = float(response.json()['price'])
+            return f"🟡 الذهب: ${price:,.2f}"
+    except Exception as e:
+        return "📡 جارٍ محاولة الاتصال بالسوق..."
+    return "⚠️ البيانات غير متوفرة حالياً"
 
-def run_factory():
-    print("\n" + "="*40)
-    print("🚀 انطلاق المصنع العالمي (النسخة الصامتة)")
-    print("📡 الحالة: رادار الأسعار يعمل 24/7")
-    print("="*40 + "\n")
+def start_engine():
+    print("\n" + "!"*30)
+    print("🚀 انطلاق المحرك الصافي (Zero-Telegram)")
+    print("📡 رادار الأسعار يعمل بنظام 24/7")
+    print("!"*30 + "\n")
     
     while True:
-        timestamp = get_riyadh_time()
-        # جلب الذهب والبيتكوين كمؤشرات أساسية للسوق
-        gold = fetch_price("PAXGUSDT", "🟡 الذهب")
-        btc  = fetch_price("BTCUSDT",  "🔵 البيتكوين")
+        current_time = get_time()
+        market_info = fetch_market_data()
         
-        print(f"[{timestamp}] -> {gold} | {btc}")
+        # طباعة النتيجة في الشاشة السوداء مباشرة
+        print(f"[{current_time}] {market_info}")
         
-        # تحديث كل 30 ثانية لضمان الدقة العالية
+        # تحديث كل 30 ثانية لضمان أعلى دقة
         time.sleep(30)
 
 if __name__ == "__main__":
-    run_factory()
+    start_engine()

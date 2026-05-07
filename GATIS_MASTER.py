@@ -2,49 +2,40 @@ import requests
 import time
 import datetime
 import pytz
-import os
 
-# --- إعدادات المهندس Gemini (نسخة الاستقرار 1.0) ---
-
-def logger(message):
-    """وظيفة تسجيل العمليات لضمان المراقبة 24/7"""
+def get_riyadh_time():
+    # توقيت الرياض الدقيق
     riyadh_tz = pytz.timezone('Asia/Riyadh')
-    now = datetime.datetime.now(riyadh_tz).strftime("%Y-%m-%d %H:%M:%S")
-    log_entry = f"[{now}] {message}"
-    print(log_entry)
-    with open("factory_log.txt", "a", encoding="utf-8") as f:
-        f.write(log_entry + "\n")
+    return datetime.datetime.now(riyadh_tz).strftime("%I:%M:%S %p")
 
-def get_market_price(symbol):
-    """رادار سحب الأسعار من الأسواق العالمية"""
+def fetch_price(symbol, label):
+    """رادار سحب الأسعار من البورصة العالمية مباشرة"""
     try:
-        # الربط مع API عالمي للحصول على بيانات دقيقة
         url = f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}"
         res = requests.get(url, timeout=10)
         if res.status_code == 200:
-            return float(res.json()['price'])
-    except Exception as e:
-        logger(f"⚠️ خطأ في الرادار: {e}")
-    return None
+            price = float(res.json()['price'])
+            return f"{label}: ${price:,.2f}"
+    except:
+        return f"{label}: جارٍ إعادة الاتصال..."
+    return f"{label}: غير متاح"
 
-def main_engine():
-    if not os.path.exists("factory_log.txt"):
-        with open("factory_log.txt", "w") as f: f.write("--- بداية سجل المصنع ---\n")
-    
-    logger("🚀 انطلاق المحرك الرئيسي للمصنع (بدون تلغرام)")
-    logger("📡 المستوى الحالي: 4 (احترافي مستقر)")
+def run_factory():
+    print("\n" + "="*40)
+    print("🚀 انطلاق المصنع العالمي (النسخة الصامتة)")
+    print("📡 الحالة: رادار الأسعار يعمل 24/7")
+    print("="*40 + "\n")
     
     while True:
-        gold_price = get_market_price("PAXGUSDT") # الذهب مقابل الدولار
+        timestamp = get_riyadh_time()
+        # جلب الذهب والبيتكوين كمؤشرات أساسية للسوق
+        gold = fetch_price("PAXGUSDT", "🟡 الذهب")
+        btc  = fetch_price("BTCUSDT",  "🔵 البيتكوين")
         
-        if gold_price:
-            logger(f"🟡 سعر الذهب الحالي: ${gold_price:,.2f}")
-            # هنا سنضيف خوارزمية اتخاذ القرار في الخطوة القادمة
+        print(f"[{timestamp}] -> {gold} | {btc}")
         
-        time.sleep(60) # تحديث كل دقيقة لضمان استقرار السيرفر المجاني
+        # تحديث كل 30 ثانية لضمان الدقة العالية
+        time.sleep(30)
 
 if __name__ == "__main__":
-    try:
-        main_engine()
-    except KeyboardInterrupt:
-        logger("🛑 تم إيقاف المصنع يدوياً")
+    run_factory()

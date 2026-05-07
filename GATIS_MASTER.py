@@ -4,7 +4,7 @@ import pytz
 import time
 
 # --- إعدادات الهوية ---
-TELEGRAM_TOKEN = "8728845103:AAGFndJW78WXNfAfNSXOiOanyqU-ItqqmiA"
+TELEGRAM_TOKEN = "8728845103:AAGFndJW78WXNfAfNSXOiOanyqU-Itqqmi-A"
 CHAT_ID = "6586845943"
 
 def get_riyadh_time():

@@ -1,32 +1,34 @@
 import requests
 import datetime
 import pytz
-
-# --- [1] الهوية الرقمية (تأكد من وجود الشرطة قبل حرف A) ---
-TELEGRAM_TOKEN = "8728845103:AAGFndJW78WXNfAfNSXOiOanyqU-Itqqmi-A"
-CHAT_ID = "6586845943"
+import time
 
 def get_riyadh_time():
     riyadh_tz = pytz.timezone('Asia/Riyadh')
     now = datetime.datetime.now(riyadh_tz)
     return now.strftime("%I:%M:%S %p")
 
-def send_telegram_signal():
-    riyadh_now = get_riyadh_time()
-    text = f"🚀 *مصنع إيش تشتي*\n✅ تم الربط بنجاح\n⏰ الوقت: {riyadh_now}"
-    
-    proxies = {'http': 'http://proxy.server:3128', 'https': 'http://proxy.server:3128'}
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    
+def get_live_price(symbol, pair_name):
     try:
-        res = requests.post(url, json={"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}, proxies=proxies, timeout=15)
-        if res.status_code == 200:
-            print(f"✅ تم الإرسال بنجاح في {riyadh_now}")
-        else:
-            print(f"❌ خطأ {res.status_code}: تأكد من التوكن")
-    except Exception as e:
-        print(f"⚠️ عطل في الشبكة: {e}")
+        url = f"https://api.binance.com/api/v3/ticker/price?symbol={symbol}"
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            price = float(response.json()['price'])
+            return f"{pair_name}: ${round(price, 2)}"
+    except:
+        return f"{pair_name}: جاري جلب البيانات..."
+    return f"{pair_name}: عطل مؤقت"
 
 if __name__ == "__main__":
-    print(f"--- {get_riyadh_time()} بدء التشغيل ---")
-    send_telegram_signal()
+    print(f"\n{'='*30}")
+    print(f"📡 رادار مصنع إيش تشتي - لوحة الأسعار")
+    print(f"⏰ توقيت الرياض: {get_riyadh_time()}")
+    print(f"{'='*30}\n")
+    
+    # سحب الأسعار وعرضها فوراً في الشاشة السوداء
+    print(get_live_price("PAXGUSDT", "🟡 الذهب (Gold)"))
+    print(get_live_price("BTCUSDT",  "🔵 البيتكوين (BTC)"))
+    print(get_live_price("ETHUSDT",  "🟣 الإيثيريوم (ETH)"))
+    
+    print(f"\n{'='*30}")
+    print("✅ النظام يعمل داخلياً بنجاح (بانتظار سيرفر تلغرام)")

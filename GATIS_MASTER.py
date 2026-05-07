@@ -2,26 +2,23 @@ import requests, time, datetime, pytz
 
 def factory_engine():
     tz = pytz.timezone('Asia/Riyadh')
-    # المنفذ البديل المسموح به للحسابات المجانية
-    proxy_url = "https://api.binance.com/api/v3/ticker/price?symbol=PAXGUSDT"
+    # هذا الرابط هو المنفذ البديل الذي لا يمنعه الحساب المجاني
+    url = "https://api.coinbase.com/v2/prices/PAXG-USD/spot"
     
-    print("\n" + "!"*40)
-    print("🚀 انطلاق المصنع (نسخة تجاوز القيود المجانية)")
-    print("📡 الحالة: الاتصال عبر المنفذ البديل")
-    print("!"*40 + "\n")
+    print("\n" + "⚡"*20)
+    print("🚀 مصنع الذهب: تم تفعيل خطة الالتفاف")
+    print("📡 المصدر الحالي: Coinbase Global")
+    print("⚡"*20 + "\n")
     
     while True:
         try:
             now = datetime.datetime.now(tz).strftime("%I:%M:%S %p")
-            # إعدادات الاتصال المتوافقة مع الحساب المجاني
-            response = requests.get(proxy_url, timeout=20)
-            
+            response = requests.get(url, timeout=15)
             if response.status_code == 200:
-                price = float(response.json()['price'])
-                print(f"[{now}] 🟡 الذهب: ${price:,.2f}")
+                price = float(response.json()['data']['amount'])
+                print(f"[{now}] 🟡 الذهب الآن: ${price:,.2f}")
             else:
-                # محاولة استخدام مصدر بديل إذا فشل الأول
-                print(f"[{now}] ⚠️ جاري تبديل قناة الاتصال...")
+                print(f"[{now}] 🔄 جاري تبديل قناة الاتصال...")
         except:
             print(f"[{now}] 📡 انتظار فتح بوابة البيانات...")
         
@@ -29,3 +26,4 @@ def factory_engine():
 
 if __name__ == "__main__":
     factory_engine()
+    
